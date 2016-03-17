@@ -1,0 +1,43 @@
+AES C#
+Advanced Encryption Standard
+https://msdn.microsoft.com/en-us/library/system.security.cryptography.aes(v=vs.110).aspx
+
+http://www.codeproject.com/Articles/26085/File-Encryption-and-Decryption-in-C
+
+
+DES C#
+Data Encryption Standard 
+https://msdn.microsoft.com/en-us/library/c4fy9hkc(v=vs.110).aspx
+
+RSA key 
+Symmetric Keys & Asymmetric Keys
+https://msdn.microsoft.com/en-us/library/5e9ft273(v=vs.110).aspx
+
+RSA
+http://www.codeproject.com/Articles/38739/RSA-Private-Key-Encryption?q=Rsa
+
+
+Walkthrough: Creating a Cryptographic Application
+https://msdn.microsoft.com/en-us/library/bb397867(v=vs.110).aspx
+
+
+https://support.microsoft.com/en-us/kb/307010
+
+Generate a Hash
+https://msdn.microsoft.com/en-us/library/w1t5hx6k(v=vs.90).aspx
+
+Hash +salt
+http://www.codeproject.com/Articles/704865/Salted-Password-Hashing-Doing-it-Right
+
+
+
+
+
+
+Extra 
+Steganography
+http://www.codeproject.com/Tips/635715/Steganography-Simple-Implementation-in-Csharp
+
+Web based ssh-certificate
+http://www.akadia.com/services/ssh_test_certificate.html
+
