@@ -19,10 +19,24 @@ namespace SecurityAESProject
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
-    {
+    { 
+
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private String userName;
+        public String UserName
+        {
+            get { return this.userName;  }
+            set
+            {
+                if (!string.Equals(this.userName, value))
+                {
+                    this.userName = value;
+                }
+            }
         }
     }
 }
