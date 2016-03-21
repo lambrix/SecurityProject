@@ -1,1 +1,16 @@
 C:\Users\SIMLAM\Documents\GitHub\SecurityProject\SecurityAESProject\SecurityAESProject\bin\Debug\SecurityAESProject.exe.config
+C:\Users\SIMLAM\Documents\GitHub\SecurityProject\SecurityAESProject\SecurityAESProject\obj\Debug\SecurityAESProject.csprojResolveAssemblyReference.cache
+C:\Users\SIMLAM\Documents\GitHub\SecurityProject\SecurityAESProject\SecurityAESProject\obj\Debug\MainWindow.g.cs
+C:\Users\SIMLAM\Documents\GitHub\SecurityProject\SecurityAESProject\SecurityAESProject\obj\Debug\App.g.cs
+C:\Users\SIMLAM\Documents\GitHub\SecurityProject\SecurityAESProject\SecurityAESProject\obj\Debug\SecurityAESProject_MarkupCompile.cache
+C:\Users\SIMLAM\Documents\GitHub\SecurityProject\SecurityAESProject\SecurityAESProject\obj\Debug\SecurityAESProject_MarkupCompile.lref
+C:\Users\SIMLAM\Documents\GitHub\SecurityProject\SecurityAESProject\SecurityAESProject\bin\Debug\SecurityAESProject.exe
+C:\Users\SIMLAM\Documents\GitHub\SecurityProject\SecurityAESProject\SecurityAESProject\bin\Debug\SecurityAESProject.pdb
+C:\Users\SIMLAM\Documents\GitHub\SecurityProject\SecurityAESProject\SecurityAESProject\obj\Debug\MainWindow.baml
+C:\Users\SIMLAM\Documents\GitHub\SecurityProject\SecurityAESProject\SecurityAESProject\obj\Debug\SecurityAESProject.g.resources
+C:\Users\SIMLAM\Documents\GitHub\SecurityProject\SecurityAESProject\SecurityAESProject\obj\Debug\SecurityAESProject.Properties.Resources.resources
+C:\Users\SIMLAM\Documents\GitHub\SecurityProject\SecurityAESProject\SecurityAESProject\obj\Debug\SecurityAESProject.csproj.GenerateResource.Cache
+C:\Users\SIMLAM\Documents\GitHub\SecurityProject\SecurityAESProject\SecurityAESProject\obj\Debug\SecurityAESProject.exe
+C:\Users\SIMLAM\Documents\GitHub\SecurityProject\SecurityAESProject\SecurityAESProject\obj\Debug\SecurityAESProject.pdb
+C:\Users\SIMLAM\Documents\GitHub\SecurityProject\SecurityAESProject\SecurityAESProject\obj\Debug\InputWindow.g.cs
+C:\Users\SIMLAM\Documents\GitHub\SecurityProject\SecurityAESProject\SecurityAESProject\obj\Debug\InputWindow.baml

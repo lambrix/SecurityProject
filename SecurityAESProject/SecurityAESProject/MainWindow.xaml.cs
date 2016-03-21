@@ -26,17 +26,11 @@ namespace SecurityAESProject
             InitializeComponent();
         }
 
-        private String userName;
-        public String UserName
+        private void button_Click(object sender, RoutedEventArgs e)
         {
-            get { return this.userName;  }
-            set
-            {
-                if (!string.Equals(this.userName, value))
-                {
-                    this.userName = value;
-                }
-            }
+            InputWindow window = new InputWindow(textBox.Text);
+            window.Show();
+            this.Close();
         }
     }
 }
