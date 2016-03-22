@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -49,6 +50,7 @@ namespace SecurityAESProject
             if (openFileDialog.ShowDialog() == true)
             {
                 pathLabel.Content = System.IO.Path.GetDirectoryName(openFileDialog.FileName);
+                
             }
         }
 
@@ -68,6 +70,19 @@ namespace SecurityAESProject
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 pathLabel.Content = files[0];
             }
+        }
+
+        private void hyperlinkButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void decrypt()
+        {
+            RijndaelManaged AES = new RijndaelManaged();
+            AES.KeySize = 256;
+            AES.BlockSize = 128;
+
         }
     }
 }
