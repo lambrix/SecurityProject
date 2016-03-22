@@ -32,17 +32,23 @@ namespace SecurityAESProject
         {
             if (textBox.Text != null && textBox.Text != "")
             {
-                
-                CspParameters cp = new CspParameters();
-                cp.KeyContainerName = textBox.Text;
-                RSACryptoServiceProvider RSA = new RSACryptoServiceProvider(cp);
+                RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
                 // Set a variable to the My Documents path.
                 string mydocpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                using (StreamWriter outputFile = new StreamWriter(mydocpath + @"\" + textBox.Text + ".txt"))
+                string personFilePrivate = mydocpath + @"\" + textBox.Text + "PrivateRSA.xml";
+                string personFilePublic = mydocpath + @"\" + textBox.Text + "PublicRSA.xml";
+                if (!File.Exists(personFilePrivate) || !File.Exists(personFilePublic))
                 {
-                    outputFile.WriteLine(RSA.ToXmlString(true));
+                    using (StreamWriter outputFile = new StreamWriter(personFilePrivate))
+                    {
+                        outputFile.WriteLine(RSA.ToXmlString(true));
+                    }
+                    using (StreamWriter outputFile = new StreamWriter(personFilePublic))
+                    {
+                        outputFile.WriteLine(RSA.ToXmlString(false));
+                    }
                 }
-                InputWindow window = new InputWindow(textBox.Text, cp);
+                InputWindow window = new InputWindow(textBox.Text);
                 window.Show();
                 this.Close();
             }
