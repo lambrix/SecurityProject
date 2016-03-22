@@ -25,13 +25,12 @@ namespace SecurityAESProject
     {
         private String userName;
         private String welcome = "Welcome ";
-        private CspParameters localCP;
+        private String fileLocation;
 
-        public InputWindow( String name, CspParameters cp)
+        public InputWindow( String name)
         {
             InitializeComponent();
             this.userName = name;
-            this.localCP = cp;
             welcome = welcome + userName;
             nameLabel.Content = welcome;
 
@@ -39,9 +38,31 @@ namespace SecurityAESProject
 
         private void nextButtonClick(object sender, RoutedEventArgs e)
         {
-            if (otherPersonTextBox.Text != "" && otherPersonTextBox.Text != null)
+            if (otherPersonTextBox.Text != "" && otherPersonTextBox.Text != null && fileLocation != "" && fileLocation != null)
             {
+                if (encryptRB.IsChecked == true)
+                {
 
+                } else
+                {
+                    // Set a variable to the My Documents path.
+                    string mydocpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                    string personFilePrivate = mydocpath + @"\" + otherPersonTextBox.Text + "PrivateRSA.xml";
+                    string personFilePublic = mydocpath + @"\" + otherPersonTextBox.Text + "PublicRSA.xml";
+                    if (!File.Exists(personFilePrivate) || !File.Exists(personFilePublic))
+                    {   
+                        RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
+                        using (StreamWriter outputFile = new StreamWriter(personFilePrivate))
+                        {
+                            outputFile.WriteLine(RSA.ToXmlString(true));
+                        }
+                        using (StreamWriter outputFile = new StreamWriter(personFilePublic))
+                        {
+                            outputFile.WriteLine(RSA.ToXmlString(true));
+                        }
+                    }
+
+                }
             }
         }
 
@@ -54,7 +75,8 @@ namespace SecurityAESProject
 
             if (openFileDialog.ShowDialog() == true)
             {
-                pathLabel.Content = System.IO.Path.GetDirectoryName(openFileDialog.FileName);
+                fileLocation = System.IO.Path.GetDirectoryName(openFileDialog.FileName);
+                pathLabel.Content = fileLocation;
                 
             }
         }
@@ -73,7 +95,8 @@ namespace SecurityAESProject
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                pathLabel.Content = files[0];
+                fileLocation = files[0];
+                pathLabel.Content = fileLocation;
             }
         }
 
