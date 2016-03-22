@@ -25,11 +25,13 @@ namespace SecurityAESProject
     {
         private String userName;
         private String welcome = "Welcome ";
+        private CspParameters localCP;
 
-        public InputWindow( String name)
+        public InputWindow( String name, CspParameters cp)
         {
             InitializeComponent();
             this.userName = name;
+            this.localCP = cp;
             welcome = welcome + userName;
             nameLabel.Content = welcome;
 
@@ -37,7 +39,10 @@ namespace SecurityAESProject
 
         private void nextButtonClick(object sender, RoutedEventArgs e)
         {
+            if (otherPersonTextBox.Text != "" && otherPersonTextBox.Text != null)
+            {
 
+            }
         }
 
         private void opendialogButtonClick(object sender, RoutedEventArgs e)
