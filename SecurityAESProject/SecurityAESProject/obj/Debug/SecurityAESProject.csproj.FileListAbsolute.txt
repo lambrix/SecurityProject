@@ -14,3 +14,4 @@ C:\Users\SIMLAM\Documents\GitHub\SecurityProject\SecurityAESProject\SecurityAESP
 C:\Users\SIMLAM\Documents\GitHub\SecurityProject\SecurityAESProject\SecurityAESProject\obj\Debug\SecurityAESProject.pdb
 C:\Users\SIMLAM\Documents\GitHub\SecurityProject\SecurityAESProject\SecurityAESProject\obj\Debug\InputWindow.g.cs
 C:\Users\SIMLAM\Documents\GitHub\SecurityProject\SecurityAESProject\SecurityAESProject\obj\Debug\InputWindow.baml
+C:\Users\11400081\Documents\projecten git\SecurityProject\SecurityAESProject\SecurityAESProject\bin\Debug\SecurityAESProject.exe.config
