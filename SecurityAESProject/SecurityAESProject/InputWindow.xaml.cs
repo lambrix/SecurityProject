@@ -27,7 +27,7 @@ namespace SecurityAESProject
         private String welcome = "Welcome ";
         private String fileLocation;
 
-        public InputWindow( String name)
+        public InputWindow(String name)
         {
             InitializeComponent();
             this.userName = name;
@@ -40,32 +40,72 @@ namespace SecurityAESProject
         {
             if (otherPersonTextBox.Text != "" && otherPersonTextBox.Text != null && fileLocation != "" && fileLocation != null)
             {
+                // Set a variable to the My Documents path.
+                string mydocpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                string personFilePrivate = mydocpath + @"\" + otherPersonTextBox.Text + "PrivateRSA.xml";
+                string personFilePublic = mydocpath + @"\" + otherPersonTextBox.Text + "PublicRSA.xml";
+                if (!File.Exists(personFilePrivate) || !File.Exists(personFilePublic))
+                {
+                    RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
+                    using (StreamWriter outputFile = new StreamWriter(personFilePrivate))
+                    {
+                        outputFile.WriteLine(RSA.ToXmlString(true));
+                    }
+                    using (StreamWriter outputFile = new StreamWriter(personFilePublic))
+                    {
+                        outputFile.WriteLine(RSA.ToXmlString(true));
+                    }
+                }
+
                 if (encryptRB.IsChecked == true)
                 {
-
-                } else
+                    
+                    Byte[] input = File.ReadAllBytes(fileLocation);
+                    Byte[] output = AESEncrypt(input);
+                    int l = fileLocation.LastIndexOf('.');
+                    string newPath = fileLocation.Substring(0, l) + "Encrypt.txt";
+                    File.WriteAllBytes(newPath,output);
+                    MessageBox.Show("encryptie gelukt");
+                }
+                else
                 {
-                    // Set a variable to the My Documents path.
-                    string mydocpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                    string personFilePrivate = mydocpath + @"\" + otherPersonTextBox.Text + "PrivateRSA.xml";
-                    string personFilePublic = mydocpath + @"\" + otherPersonTextBox.Text + "PublicRSA.xml";
-                    if (!File.Exists(personFilePrivate) || !File.Exists(personFilePublic))
-                    {   
-                        RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
-                        using (StreamWriter outputFile = new StreamWriter(personFilePrivate))
-                        {
-                            outputFile.WriteLine(RSA.ToXmlString(true));
-                        }
-                        using (StreamWriter outputFile = new StreamWriter(personFilePublic))
-                        {
-                            outputFile.WriteLine(RSA.ToXmlString(true));
-                        }
-                    }
+
 
                 }
             }
         }
 
+        //byte array encrypteren via aes methode
+        private byte[] AESEncrypt(byte[] input)
+        {
+            byte[] encryptedBytes = null;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                using (AesManaged AES = new AesManaged())
+                {
+                    AES.KeySize = 256;
+                    AES.BlockSize = 128;
+
+                    AES.GenerateKey(); //sleutel generen
+                    //eventueel IV nog
+
+                    //sleutel bijhouden, later encrypteren met RSA via publieke sleutel van de andere
+                    byte[] key = AES.Key;
+                    int l = fileLocation.LastIndexOf('.');
+                    MessageBox.Show(l + "");
+                    string AESKeyPath= fileLocation.Substring(0, l) + "AES.txt";
+                    File.WriteAllBytes(AESKeyPath, key);
+
+                    using (var cs = new CryptoStream(ms, AES.CreateEncryptor(), CryptoStreamMode.Write))
+                    {
+                        cs.Write(input, 0, input.Length);
+                        cs.Close();
+                    }
+                    encryptedBytes = ms.ToArray();
+                }
+            }
+            return encryptedBytes;
+        }
         private void opendialogButtonClick(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -75,9 +115,10 @@ namespace SecurityAESProject
 
             if (openFileDialog.ShowDialog() == true)
             {
-                fileLocation = System.IO.Path.GetDirectoryName(openFileDialog.FileName);
+                //fileLocation = System.IO.Path.GetDirectoryName(openFileDialog.FileName); We hebben de file nodig niet het pad
+                fileLocation = System.IO.Path.GetFullPath(openFileDialog.FileName);
                 pathLabel.Content = fileLocation;
-                
+
             }
         }
 
