@@ -55,7 +55,7 @@ namespace SecurityAESProject
                     }
                     using (StreamWriter outputFile = new StreamWriter(personFilePublic))
                     {
-                        outputFile.WriteLine(RSA.ToXmlString(true));
+                        outputFile.WriteLine(RSA.ToXmlString(false));
                     }
                 }
 
@@ -97,11 +97,7 @@ namespace SecurityAESProject
 
                     //sleutel bijhouden, later encrypteren met RSA via publieke sleutel van de andere
                     byte[] key = AES.Key;
-                    int l = fileLocation.LastIndexOf('.');
-                    MessageBox.Show(l + "");
-                    string AESKeyPath = fileLocation.Substring(0, l) + "AES.txt";
-                    File.WriteAllBytes(AESKeyPath, key);
-
+                
                     using (var cs = new CryptoStream(ms, AES.CreateEncryptor(), CryptoStreamMode.Write))
                     {
                         cs.Write(input, 0, input.Length);
