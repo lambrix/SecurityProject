@@ -33,7 +33,9 @@ https://msdn.microsoft.com/en-us/library/w1t5hx6k(v=vs.90).aspx
 Hash +salt
 http://www.codeproject.com/Articles/704865/Salted-Password-Hashing-Doing-it-Right
 
-
+sha256
+https://msdn.microsoft.com/en-us/library/system.security.cryptography.sha512(v=vs.110).aspx
+https://msdn.microsoft.com/en-us/library/system.security.cryptography.sha512(v=vs.110).aspx
 
 Extra 
 Steganography

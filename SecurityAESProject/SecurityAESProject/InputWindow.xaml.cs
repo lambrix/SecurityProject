@@ -64,13 +64,11 @@ namespace SecurityAESProject
 
                     Byte[] input = File.ReadAllBytes(fileLocation);
                     Byte[] output = AESEncrypt(input);
-                    
+
                     //wegschrijven
                     string newPath = pathfolder + "\\beveiligd-bestand.txt";
                     File.WriteAllBytes(newPath, output);
-                    MessageBox.Show("2/3 done\ntodo: hash");
 
-                    //hash maken bestand
                     MessageBox.Show("encryptie gelukt");
                 }
                 else
@@ -97,7 +95,7 @@ namespace SecurityAESProject
 
                     //sleutel bijhouden, later encrypteren met RSA via publieke sleutel van de andere
                     byte[] key = AES.Key;
-                
+
                     using (var cs = new CryptoStream(ms, AES.CreateEncryptor(), CryptoStreamMode.Write))
                     {
                         cs.Write(input, 0, input.Length);
@@ -107,14 +105,43 @@ namespace SecurityAESProject
 
                     //AESsleutel encrypteren
                     KeyEncrypter(key);
+                    //hash maken van orgineel bestand
+                    HashEncrypter(input);
                 }
             }
             return encryptedBytes;
         }
 
+        private void HashEncrypter(byte[] input)
+        {
+            //hash maken van orgineel bestand en encrypteren met privesleutel
+
+            SHA256Managed SHhash = new SHA256Managed();
+            byte[] HashValue = SHhash.ComputeHash(input);
+            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+            {
+                string mydocpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                string personFilePrivate = mydocpath + @"\" + userName + "PrivateRSA.xml";
+                string privateKey;
+                using (StreamReader inputFile = new StreamReader(personFilePrivate))
+                {
+                    privateKey = inputFile.ReadLine();
+                }
+                rsa.FromXmlString(privateKey);
+
+                //encrypteren
+                byte[] encrypted = rsa.Encrypt(HashValue, true);
+
+                //gegevens in een bestand wegschrijven
+                string path = pathfolder + "\\hash.txt";
+                File.WriteAllBytes(path, encrypted);
+                MessageBox.Show("2/3 Done");
+            }
+        }
+
         private void KeyEncrypter(byte[] key)
         {
-         
+
             using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
             {
                 string publickKey = null;
@@ -128,12 +155,12 @@ namespace SecurityAESProject
 
                 //encrypteren
                 byte[] encrypted = rsa.Encrypt(key, true);
-                
+
                 //folder aanmaken voor bestanden op te slaan
                 int l = fileLocation.LastIndexOf('.');
                 pathfolder = fileLocation.Substring(0, l);
                 Directory.CreateDirectory(pathfolder);
-                
+
                 //gegevens in een bestand wegschrijven
                 string path = pathfolder + "\\sleutel.txt";
                 File.WriteAllBytes(path, encrypted);
