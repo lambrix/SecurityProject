@@ -26,6 +26,8 @@ namespace SecurityAESProject
         private String userName;
         private String welcome = "Welcome ";
         private String fileLocation;
+        private string personFilePublic;
+        string pathfolder;
 
         public InputWindow(String name)
         {
@@ -43,7 +45,7 @@ namespace SecurityAESProject
                 // Set a variable to the My Documents path.
                 string mydocpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                 string personFilePrivate = mydocpath + @"\" + otherPersonTextBox.Text + "PrivateRSA.xml";
-                string personFilePublic = mydocpath + @"\" + otherPersonTextBox.Text + "PublicRSA.xml";
+                personFilePublic = mydocpath + @"\" + otherPersonTextBox.Text + "PublicRSA.xml";
                 if (!File.Exists(personFilePrivate) || !File.Exists(personFilePublic))
                 {
                     RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
@@ -59,12 +61,16 @@ namespace SecurityAESProject
 
                 if (encryptRB.IsChecked == true)
                 {
-                    
+
                     Byte[] input = File.ReadAllBytes(fileLocation);
                     Byte[] output = AESEncrypt(input);
-                    int l = fileLocation.LastIndexOf('.');
-                    string newPath = fileLocation.Substring(0, l) + "Encrypt.txt";
-                    File.WriteAllBytes(newPath,output);
+                    
+                    //wegschrijven
+                    string newPath = pathfolder + "\\beveiligd-bestand.txt";
+                    File.WriteAllBytes(newPath, output);
+                    MessageBox.Show("2/3 done\ntodo: hash");
+
+                    //hash maken bestand
                     MessageBox.Show("encryptie gelukt");
                 }
                 else
@@ -93,7 +99,7 @@ namespace SecurityAESProject
                     byte[] key = AES.Key;
                     int l = fileLocation.LastIndexOf('.');
                     MessageBox.Show(l + "");
-                    string AESKeyPath= fileLocation.Substring(0, l) + "AES.txt";
+                    string AESKeyPath = fileLocation.Substring(0, l) + "AES.txt";
                     File.WriteAllBytes(AESKeyPath, key);
 
                     using (var cs = new CryptoStream(ms, AES.CreateEncryptor(), CryptoStreamMode.Write))
@@ -102,9 +108,42 @@ namespace SecurityAESProject
                         cs.Close();
                     }
                     encryptedBytes = ms.ToArray();
+
+                    //AESsleutel encrypteren
+                    KeyEncrypter(key);
                 }
             }
             return encryptedBytes;
+        }
+
+        private void KeyEncrypter(byte[] key)
+        {
+         
+            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+            {
+                string publickKey = null;
+
+                // publieke key importeren:
+                using (StreamReader inputFile = new StreamReader(personFilePublic))
+                {
+                    publickKey = inputFile.ReadLine();
+                }
+                rsa.FromXmlString(publickKey);
+
+                //encrypteren
+                byte[] encrypted = rsa.Encrypt(key, true);
+                
+                //folder aanmaken voor bestanden op te slaan
+                int l = fileLocation.LastIndexOf('.');
+                pathfolder = fileLocation.Substring(0, l);
+                Directory.CreateDirectory(pathfolder);
+                
+                //gegevens in een bestand wegschrijven
+                string path = pathfolder + "\\sleutel.txt";
+                File.WriteAllBytes(path, encrypted);
+                MessageBox.Show("1/3 Done");
+
+            }
         }
         private void opendialogButtonClick(object sender, RoutedEventArgs e)
         {
