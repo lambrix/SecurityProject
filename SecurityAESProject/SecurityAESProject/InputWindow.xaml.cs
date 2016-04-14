@@ -44,6 +44,8 @@ namespace SecurityAESProject
             {
                 // Set a variable to the My Documents path.
                 string mydocpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                pathfolder = mydocpath;
+                //files van andere persoon
                 string personFilePrivate = mydocpath + @"\" + otherPersonTextBox.Text + "PrivateRSA.xml";
                 personFilePublic = mydocpath + @"\" + otherPersonTextBox.Text + "PublicRSA.xml";
                 if (!File.Exists(personFilePrivate) || !File.Exists(personFilePublic))
@@ -73,6 +75,9 @@ namespace SecurityAESProject
                 }
                 else
                 {
+                    Byte[] input = File.ReadAllBytes(fileLocation);
+                    AESDecrypt(input);
+
 
 
                 }
@@ -91,10 +96,24 @@ namespace SecurityAESProject
                     AES.BlockSize = 128;
 
                     AES.GenerateKey(); //sleutel generen
+                    AES.GenerateIV();
                     //eventueel IV nog
 
                     //sleutel bijhouden, later encrypteren met RSA via publieke sleutel van de andere
                     byte[] key = AES.Key;
+
+                    byte[] IV = AES.IV;
+                    //folder aanmaken voor bestanden op te slaan
+                    int l = fileLocation.LastIndexOf('.');
+                    pathfolder = fileLocation.Substring(0, l);
+                    Directory.CreateDirectory(pathfolder);
+
+                    //gegevens in een bestand wegschrijven
+                    string path = pathfolder + "\\oldsleutel.txt";
+                    File.WriteAllBytes(path, key);
+
+                    string IVpath = pathfolder + "\\IV.txt";
+                    File.WriteAllBytes(IVpath, IV);
 
                     using (var cs = new CryptoStream(ms, AES.CreateEncryptor(), CryptoStreamMode.Write))
                     {
@@ -152,7 +171,6 @@ namespace SecurityAESProject
                     publickKey = inputFile.ReadLine();
                 }
                 rsa.FromXmlString(publickKey);
-
                 //encrypteren
                 byte[] encrypted = rsa.Encrypt(key, true);
 
@@ -168,6 +186,7 @@ namespace SecurityAESProject
 
             }
         }
+
         private void opendialogButtonClick(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -208,12 +227,101 @@ namespace SecurityAESProject
 
         }
 
-        private void decrypt()
+        private void AESDecrypt(byte[] input)
         {
-            RijndaelManaged AES = new RijndaelManaged();
-            AES.KeySize = 256;
-            AES.BlockSize = 128;
+            string plaintext = null;
+            //byte[] decryptedBytes = null;
+            using (MemoryStream ms = new MemoryStream(input))
+            {
+                using (AesManaged AES = new AesManaged())
+                {
+                    //instanties van AES aanmaken.
 
+                    int l = fileLocation.LastIndexOf('.');
+                    pathfolder = fileLocation.Substring(0, l);
+                    string rightLocation = pathfolder.Substring(0, pathfolder.LastIndexOf('\\'));
+                    string keyPath = rightLocation + "\\IV.txt";
+                    Byte[] IVFile = File.ReadAllBytes(keyPath);
+
+                    //decrypten lukt nu.
+                    byte[] decryptedKey = KeyDecrypten();
+
+                    AES.Key = decryptedKey;
+                    AES.IV = IVFile;
+
+                    using (var cs = new CryptoStream(ms, AES.CreateDecryptor(), CryptoStreamMode.Read))
+                    {
+                        using (var srDcrypt = new StreamReader(cs))
+                        {
+                            plaintext = srDcrypt.ReadToEnd();
+                        }
+                    }
+
+                    //gegevens in een bestand wegschrijven
+                    string path = rightLocation + "\\plaintext.txt";
+                    File.WriteAllText(path, plaintext);
+
+                    HashDecrypter(input);
+                }
+            }
+        }
+
+        private byte[] KeyDecrypten()
+        {
+            using(RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+            {
+                int l = fileLocation.LastIndexOf('.');
+                pathfolder = fileLocation.Substring(0, l);
+                string rightLocation = pathfolder.Substring(0, pathfolder.LastIndexOf('\\'));
+                Directory.CreateDirectory(rightLocation);
+
+                string privateKey = null;
+                string keyPath = rightLocation + "\\sleutel.txt";
+                Byte[] RSAKey = File.ReadAllBytes(keyPath);
+
+                string mydocpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                string myPrivateKey = mydocpath + @"\" + userName + "PrivateRSA.xml";
+
+                using (StreamReader inputFile = new StreamReader(myPrivateKey))
+                {
+                    privateKey = inputFile.ReadLine();
+                }
+
+                rsa.FromXmlString(privateKey);
+                byte[] decrypted = rsa.Decrypt(RSAKey,true);
+
+                //gegevens in een bestand wegschrijven
+                string path = rightLocation + "\\dsleutel.txt";
+                File.WriteAllBytes(path, decrypted);
+
+                return decrypted;
+            }
+        }
+
+        private void HashDecrypter(byte[] input)
+        {
+            //hash maken van orgineel bestand en encrypteren met privesleutel
+
+            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+            {
+                string mydocpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                string personFilePublic = mydocpath + @"\" + otherPersonTextBox.Text + "PublicRSA.xml";
+                string publicKey;
+                using (StreamReader inputFile = new StreamReader(personFilePublic))
+                {
+                    publicKey = inputFile.ReadLine();
+                }
+                rsa.FromXmlString(publicKey);
+
+
+                //decrypteren
+                byte[] decrypted = rsa.Decrypt(input, true);
+
+                //gegevens in een bestand wegschrijven
+                string path = pathfolder + "\\nohash.txt";
+                File.WriteAllBytes(path, decrypted);
+                MessageBox.Show("2/3 Done");
+            }
         }
     }
 }

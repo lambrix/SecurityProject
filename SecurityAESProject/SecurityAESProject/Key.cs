@@ -4,10 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-<<<<<<< HEAD
-=======
 using System.Xml;
->>>>>>> 129232e310aca04a25746d732d064c0bba219ac0
 
 namespace SecurityAESProject
 {
@@ -80,10 +77,5 @@ namespace SecurityAESProject
             }
 
         }
-
-<<<<<<< HEAD
-
-=======
->>>>>>> 129232e310aca04a25746d732d064c0bba219ac0
     }
 }
