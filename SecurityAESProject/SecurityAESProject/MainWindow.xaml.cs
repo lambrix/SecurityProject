@@ -39,14 +39,15 @@ namespace SecurityAESProject
                 string personFilePublic = mydocpath + @"\" + textBox.Text + "PublicRSA.xml";
                 if (!File.Exists(personFilePrivate) || !File.Exists(personFilePublic))
                 {
-                    using (StreamWriter outputFile = new StreamWriter(personFilePrivate))
-                    {
-                        outputFile.WriteLine(RSA.ToXmlString(true));
-                    }
                     using (StreamWriter outputFile = new StreamWriter(personFilePublic))
                     {
                         outputFile.WriteLine(RSA.ToXmlString(false));
                     }
+                    using (StreamWriter outputFile = new StreamWriter(personFilePrivate))
+                    {
+                        outputFile.WriteLine(RSA.ToXmlString(true));
+                    }
+                    
                 }
                 InputWindow window = new InputWindow(textBox.Text);
                 window.Show();
