@@ -51,14 +51,15 @@ namespace SecurityAESProject
                 if (!File.Exists(personFilePrivate) || !File.Exists(personFilePublic))
                 {
                     RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
-                    using (StreamWriter outputFile = new StreamWriter(personFilePrivate))
-                    {
-                        outputFile.WriteLine(RSA.ToXmlString(true));
-                    }
                     using (StreamWriter outputFile = new StreamWriter(personFilePublic))
                     {
                         outputFile.WriteLine(RSA.ToXmlString(false));
                     }
+                    using (StreamWriter outputFile = new StreamWriter(personFilePrivate))
+                    {
+                        outputFile.WriteLine(RSA.ToXmlString(true));
+                    }
+
                 }
 
                 if (encryptRB.IsChecked == true)
@@ -150,7 +151,7 @@ namespace SecurityAESProject
                 rsa.FromXmlString(privateKey);
 
                 //encrypteren
-                byte[] encrypted = rsa.Encrypt(HashValue, true);
+                byte[] encrypted = rsa.Encrypt(HashValue, false);// test false 
 
                 //gegevens in een bestand wegschrijven
                 string path = pathfolder + "\\hash.txt";
@@ -263,21 +264,30 @@ namespace SecurityAESProject
                         string path = rightLocation + "\\plaintext.txt";
                         File.WriteAllText(path, plaintext);
 
-                        HashDecrypter();
-                    } else
+                        string hashpath = rightLocation + "\\hash.txt";
+                        byte[] hashencrypted = File.ReadAllBytes(hashpath);
+                        HashDecrypter(hashencrypted);
+
+                        //HashDecrypter();
+                    }
+                    else
                     {
                         MainWindow window = new MainWindow();
                         window.Show();
                         this.Close();
                     }
                     
+
+
+                    
+
                 }
             }
         }
 
         private byte[] KeyDecrypten()
         {
-            using(RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
             {
                 int l = fileLocation.LastIndexOf('.');
                 pathfolder = fileLocation.Substring(0, l);
@@ -297,6 +307,7 @@ namespace SecurityAESProject
                 }
 
                 rsa.FromXmlString(privateKey);
+
                 try
                 {
                     byte[] decrypted = rsa.Decrypt(RSAKey, true);
@@ -315,24 +326,30 @@ namespace SecurityAESProject
             }
         }
 
-        private void HashDecrypter()
+        private void HashDecrypter(byte[] input)
         {
             using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
             {
+                //publieke sleutel op halen
                 string mydocpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                 string personFilePublic = mydocpath + @"\" + otherPersonTextBox.Text + "PublicRSA.xml";
+                MessageBox.Show(personFilePublic);
+
                 string publicKey;
                 using (StreamReader inputFile = new StreamReader(personFilePublic))
                 {
                     publicKey = inputFile.ReadLine();
                 }
+
                 rsa.FromXmlString(publicKey);
+                MessageBox.Show(publicKey);
+
 
                 pathfolder = pathfolder.Substring(0, pathfolder.LastIndexOf('\\'));
                 string hashFile = pathfolder + @"\hash.txt";
 
                 byte[] unhash = File.ReadAllBytes(hashFile);
-
+                
                 //decrypteren
                 byte[] decryptedHash = rsa.Decrypt(unhash, true);
 
@@ -344,6 +361,29 @@ namespace SecurityAESProject
                 byte[] hashedPlainText = SHhash.ComputeHash(plainText);
 
                 MessageBox.Show(decryptedHash.SequenceEqual(hashedPlainText) + "");
+
+
+                byte[] decrypted = rsa.Decrypt(input, true);
+                //
+                //gegevens in een bestand wegschrijven
+                string path = pathfolder + "\\hashdecrypted.txt";
+                //File.WriteAllBytes(path, decrypted);
+                MessageBox.Show("2/3 Done");
+
+                //hash generen om te checken als die hetzelfde is 
+                pathfolder = pathfolder.Substring(0, pathfolder.LastIndexOf('\\'));
+                byte[] HashValue = SHhash.ComputeHash(File.ReadAllBytes(pathfolder + "\\plaintext.txt"));
+
+                MessageBox.Show(HashValue.ToString() +"\n\n" + decrypted.ToString());
+                bool areEqual = HashValue.SequenceEqual(decrypted);
+                if (areEqual)
+                {
+                    MessageBox.Show("hashes zijn gelijk");
+                }
+                else
+                {
+                    MessageBox.Show("hashes zijn verschillend");
+                }
             }
         }
     }
