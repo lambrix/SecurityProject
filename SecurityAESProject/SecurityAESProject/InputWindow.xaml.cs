@@ -72,14 +72,15 @@ namespace SecurityAESProject
                     File.WriteAllBytes(newPath, output);
 
                     MessageBox.Show("encryptie gelukt");
+
+                    MainWindow window = new MainWindow();
+                    window.Show();
+                    this.Close();
                 }
                 else
                 {
                     Byte[] input = File.ReadAllBytes(fileLocation);
                     AESDecrypt(input);
-
-
-
                 }
             }
         }
@@ -243,25 +244,33 @@ namespace SecurityAESProject
                     string keyPath = rightLocation + "\\IV.txt";
                     Byte[] IVFile = File.ReadAllBytes(keyPath);
 
-                    //decrypten lukt nu.
+                    //
                     byte[] decryptedKey = KeyDecrypten();
-
-                    AES.Key = decryptedKey;
-                    AES.IV = IVFile;
-
-                    using (var cs = new CryptoStream(ms, AES.CreateDecryptor(), CryptoStreamMode.Read))
+                    if ( decryptedKey != null && decryptedKey.Length > 0)
                     {
-                        using (var srDcrypt = new StreamReader(cs))
+                        AES.Key = decryptedKey;
+                        AES.IV = IVFile;
+
+                        using (var cs = new CryptoStream(ms, AES.CreateDecryptor(), CryptoStreamMode.Read))
                         {
-                            plaintext = srDcrypt.ReadToEnd();
+                            using (var srDcrypt = new StreamReader(cs))
+                            {
+                                plaintext = srDcrypt.ReadToEnd();
+                            }
                         }
+
+                        //gegevens in een bestand wegschrijven
+                        string path = rightLocation + "\\plaintext.txt";
+                        File.WriteAllText(path, plaintext);
+
+                        HashDecrypter();
+                    } else
+                    {
+                        MainWindow window = new MainWindow();
+                        window.Show();
+                        this.Close();
                     }
-
-                    //gegevens in een bestand wegschrijven
-                    string path = rightLocation + "\\plaintext.txt";
-                    File.WriteAllText(path, plaintext);
-
-                    HashDecrypter(input);
+                    
                 }
             }
         }
@@ -288,20 +297,26 @@ namespace SecurityAESProject
                 }
 
                 rsa.FromXmlString(privateKey);
-                byte[] decrypted = rsa.Decrypt(RSAKey,true);
+                try
+                {
+                    byte[] decrypted = rsa.Decrypt(RSAKey, true);
 
-                //gegevens in een bestand wegschrijven
-                string path = rightLocation + "\\dsleutel.txt";
-                File.WriteAllBytes(path, decrypted);
+                    //gegevens in een bestand wegschrijven
+                    string path = rightLocation + "\\dsleutel.txt";
+                    File.WriteAllBytes(path, decrypted);
 
-                return decrypted;
+                    return decrypted;
+                } catch (CryptographicException ex)
+                {
+                    MessageBox.Show("Sorry, the file is not meant for you!");
+                    return null;
+                }
+                
             }
         }
 
-        private void HashDecrypter(byte[] input)
+        private void HashDecrypter()
         {
-            //hash maken van orgineel bestand en encrypteren met privesleutel
-
             using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
             {
                 string mydocpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -313,14 +328,22 @@ namespace SecurityAESProject
                 }
                 rsa.FromXmlString(publicKey);
 
+                pathfolder = pathfolder.Substring(0, pathfolder.LastIndexOf('\\'));
+                string hashFile = pathfolder + @"\hash.txt";
+
+                byte[] unhash = File.ReadAllBytes(hashFile);
 
                 //decrypteren
-                byte[] decrypted = rsa.Decrypt(input, true);
+                byte[] decryptedHash = rsa.Decrypt(unhash, true);
 
-                //gegevens in een bestand wegschrijven
-                string path = pathfolder + "\\nohash.txt";
-                File.WriteAllBytes(path, decrypted);
-                MessageBox.Show("2/3 Done");
+                String plainTextFile = pathfolder + @"\plaintext.txt";
+
+                byte[] plainText = File.ReadAllBytes(plainTextFile);
+
+                SHA256Managed SHhash = new SHA256Managed();
+                byte[] hashedPlainText = SHhash.ComputeHash(plainText);
+
+                MessageBox.Show(decryptedHash.SequenceEqual(hashedPlainText) + "");
             }
         }
     }
