@@ -10,7 +10,7 @@ namespace SecurityAESProject
     {
         public enum State
         {
-            Hiding, 
+            Hiding,
             Filling_With_Zeros
         };
 
