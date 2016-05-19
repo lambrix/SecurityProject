@@ -43,7 +43,7 @@
             <TabItem Header="Steganography">
                 <Grid>
                     <Border BorderThickness="1" BorderBrush="Black" Height="200" Margin="25,25,0,0" Width="220" VerticalAlignment="Top" HorizontalAlignment="Left">
-                        <Image x:Name="image"/>
+                        <Image x:Name="imagePictureBox"/>
                     </Border>
                     <Button x:Name="openDialogButtonImage" Content="Open" HorizontalAlignment="Left" Margin="204,195,0,0" VerticalAlignment="Center" Width="41" Click="opendialogButtonClickImage" Height="34"/>
                     <Label x:Name="imagePathLabel" BorderBrush="Black" BorderThickness="1px" Content="Path:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="25,195,0,0" Width="179" Height="34" FontSize="9.333" RenderTransformOrigin="0.5,0.5"/>
