@@ -205,6 +205,44 @@ namespace SecurityAESProject
             }
         }
 
+        private void opendialogButtonClickImage(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialogImage = new OpenFileDialog();
+            openFileDialogImage.Filter = "Image Files (*.png*)|*.png*";
+            openFileDialogImage.FilterIndex = 1;
+            openFileDialogImage.Multiselect = false;
+
+            if (openFileDialogImage.ShowDialog() == true)
+            {
+                //fileLocation = System.IO.Path.GetDirectoryName(openFileDialog.FileName); We hebben de file nodig niet het pad
+                fileLocation = System.IO.Path.GetFullPath(openFileDialogImage.FileName);
+                imagePathLabel.Content = fileLocation;
+                image.Source = new BitmapImage(new Uri(openFileDialogImage.FileName));
+
+            }
+        }
+
+        private void opendialogButtonClickText(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialogText = new OpenFileDialog();
+            openFileDialogText.Filter = "Text files (*.txt)|*.txt";
+            openFileDialogText.FilterIndex = 1;
+            openFileDialogText.Multiselect = false;
+
+            if (openFileDialogText.ShowDialog() == true)
+            {
+                //fileLocation = System.IO.Path.GetDirectoryName(openFileDialog.FileName); We hebben de file nodig niet het pad
+                fileLocation = System.IO.Path.GetFullPath(openFileDialogText.FileName);
+                textPathLabel.Content = fileLocation;
+                textToBeHidden.Text = File.ReadAllText(openFileDialogText.FileName);
+                textToBeHidden.TextWrapping = TextWrapping.Wrap;
+            }
+        }
+
+        private void hideTextInImage(Object sender, RoutedEventArgs e) { }
+
+        private void extractTextFromImage(Object sender, RoutedEventArgs e) { }
+
         private void DropList_DragEnter(object sender, DragEventArgs e)
         {
             if (!e.Data.GetDataPresent("myFormat") ||

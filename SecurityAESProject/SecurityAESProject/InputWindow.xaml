@@ -7,35 +7,76 @@
         mc:Ignorable="d"
         Title="InputWindow" Height="350" Width="525">
     <Grid>
-        <Button x:Name="nextScreenButton" Content="Next" HorizontalAlignment="Left" Margin="341,188,0,0" VerticalAlignment="Top" Width="87" Click="nextButtonClick" Height="34"/>
-        <RadioButton x:Name="encryptRB" GroupName="crypt" Content="Encrypt" HorizontalAlignment="Left" Margin="341,47,0,0" VerticalAlignment="Top" IsChecked="True"/>
-        <RadioButton x:Name="decryptRB" GroupName="crypt" Content="Decrypt" HorizontalAlignment="Left" Margin="341,84,0,0" VerticalAlignment="Top" />
-        <Button x:Name="openDialogButton" Content="Open" HorizontalAlignment="Left" Margin="286,188,0,0" VerticalAlignment="Top" Width="41" Click="opendialogButtonClick" Height="34"/>
-        <Label x:Name="pathLabel" BorderBrush="Black" BorderThickness="1px" Content="Path:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="107,188,0,0" Width="179" Height="34" FontSize="9.333" RenderTransformOrigin="0.5,0.5"/>
-        <ListView x:Name="dropList" Drop="DropList_Drop" DragEnter="DropList_DragEnter" AllowDrop="True" HorizontalAlignment="Left" Height="141" Margin="107,47,0,0"  VerticalAlignment="Top" Width="220" />
-        <Label x:Name="nameLabel" Content="" HorizontalAlignment="Left" Margin="211,21,0,0" VerticalAlignment="Top" Width="116" RenderTransformOrigin="0.495,0.5"/>
-        <Button x:Name="hyperlinkButton" Content="I don't have a key!" HorizontalAlignment="Left" Margin="10,292,0,0" VerticalAlignment="Top" Width="98" Click="hyperlinkButton_Click">
-            <Button.Template>
-                <ControlTemplate TargetType="Button">
-                    <TextBlock TextDecorations="Underline">
+        <TabControl>
+            <TabItem Header="Encrypt/Decrypt">
+                <Grid>
+                    <Button x:Name="nextScreenButton" Content="Next" HorizontalAlignment="Left" Margin="341,188,0,0" VerticalAlignment="Top" Width="87" Click="nextButtonClick" Height="34"/>
+                    <RadioButton x:Name="encryptRB" GroupName="crypt" Content="Encrypt" HorizontalAlignment="Left" Margin="341,47,0,0" VerticalAlignment="Top" IsChecked="True"/>
+                    <RadioButton x:Name="decryptRB" GroupName="crypt" Content="Decrypt" HorizontalAlignment="Left" Margin="341,84,0,0" VerticalAlignment="Top" />
+                    <Button x:Name="openDialogButton" Content="Open" HorizontalAlignment="Left" Margin="286,188,0,0" VerticalAlignment="Top" Width="41" Click="opendialogButtonClick" Height="34"/>
+                    <Label x:Name="pathLabel" BorderBrush="Black" BorderThickness="1px" Content="Path:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="107,188,0,0" Width="179" Height="34" FontSize="9.333" RenderTransformOrigin="0.5,0.5"/>
+                    <ListView x:Name="dropList" Drop="DropList_Drop" DragEnter="DropList_DragEnter" AllowDrop="True" HorizontalAlignment="Left" Height="141" Margin="107,47,0,0"  VerticalAlignment="Top" Width="220" />
+                    <Label x:Name="nameLabel" Content="" HorizontalAlignment="Left" Margin="211,21,0,0" VerticalAlignment="Top" Width="116" RenderTransformOrigin="0.495,0.5"/>
+                    <Button x:Name="hyperlinkButton" Content="I don't have a key!" HorizontalAlignment="Left" Margin="10,292,0,0" VerticalAlignment="Top" Width="98" Click="hyperlinkButton_Click">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <TextBlock TextDecorations="Underline">
                         <ContentPresenter/>
-                    </TextBlock>
-                </ControlTemplate>
-            </Button.Template>
-            <Button.Style>
-                <Style TargetType="Button">
-                    <Setter Property="Foreground" Value="Blue"/>
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="true">
-                            <Setter Property="Foreground" Value="Red"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </Button.Style>
-        </Button>
-        <TextBox x:Name="otherPersonTextBox" HorizontalAlignment="Left" Height="34" Margin="341,154,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="87"/>
-        <Label x:Name="NameLabel" Content="Specify Name" HorizontalAlignment="Left" Margin="341,128,0,0" VerticalAlignment="Top" Width="87"/>
+                                </TextBlock>
+                            </ControlTemplate>
+                        </Button.Template>
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Foreground" Value="Blue"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="true">
+                                        <Setter Property="Foreground" Value="Red"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <TextBox x:Name="otherPersonTextBox" HorizontalAlignment="Left" Height="34" Margin="341,154,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="87"/>
+                    <Label x:Name="NameLabel" Content="Specify Name" HorizontalAlignment="Left" Margin="341,128,0,0" VerticalAlignment="Top" Width="87"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Steganography">
+                <Grid>
+                    <Border BorderThickness="1" BorderBrush="Black" Height="200" Margin="25,25,0,0" Width="220" VerticalAlignment="Top" HorizontalAlignment="Left">
+                        <Image x:Name="image"/>
+                    </Border>
+                    <Button x:Name="openDialogButtonImage" Content="Open" HorizontalAlignment="Left" Margin="204,195,0,0" VerticalAlignment="Center" Width="41" Click="opendialogButtonClickImage" Height="34"/>
+                    <Label x:Name="imagePathLabel" BorderBrush="Black" BorderThickness="1px" Content="Path:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="25,195,0,0" Width="179" Height="34" FontSize="9.333" RenderTransformOrigin="0.5,0.5"/>
 
+                    <Border BorderThickness="1" BorderBrush="Black" Height="350" Width="1" VerticalAlignment="Top" HorizontalAlignment="Center">
+                        
+                    </Border>
+                    <Border BorderThickness="1" BorderBrush="Black" Width="200" Margin="25,25,25,0" Height="150" VerticalAlignment="Top" HorizontalAlignment="Right"> 
+                        <ScrollViewer>
+                            <TextBlock x:Name="textToBeHidden">
+
+                            </TextBlock>
+                        </ScrollViewer>
+                    </Border>
+                    <Button x:Name="openDialogButtonText" Content="Open" HorizontalAlignment="Right" Margin="0,95,25,0" VerticalAlignment="Center" Width="41" Click="opendialogButtonClickText" Height="34"/>
+                    <Label x:Name="textPathLabel" BorderBrush="Black" BorderThickness="1px" Content="Path:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,95,66,0" Width="159" Height="34" FontSize="9.333" RenderTransformOrigin="0.5,0.5"/>
+
+                    <Border BorderThickness="1" BorderBrush="Black" Width="255" Height="1" HorizontalAlignment="Right" Margin="0,150,0,0">
+                        
+                    </Border>
+
+                    <Grid>
+                        <Button Content="Hide" Width="75" Height="34" Margin="0,229,150,29.8" HorizontalAlignment="Right" Click="hideTextInImage">
+                            
+                        </Button>
+                        <Button Content="Extract" Width="75" Height="34" Margin="0,229,25,29.8" HorizontalAlignment="Right" Click="extractTextFromImage">
+                            
+                        </Button>
+                    </Grid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        
 
     </Grid>
 </Window>
