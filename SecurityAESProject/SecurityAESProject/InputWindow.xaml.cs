@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -28,6 +29,10 @@ namespace SecurityAESProject
         private String fileLocation;
         private string personFilePublic;
         string pathfolder;
+        //stega. var
+        private Bitmap bmp = null;
+        private string extractedText = string.Empty;
+        private string pathfile = string.Empty;
 
         public InputWindow(String name)
         {
@@ -217,7 +222,7 @@ namespace SecurityAESProject
                 //fileLocation = System.IO.Path.GetDirectoryName(openFileDialog.FileName); We hebben de file nodig niet het pad
                 fileLocation = System.IO.Path.GetFullPath(openFileDialogImage.FileName);
                 imagePathLabel.Content = fileLocation;
-                image.Source = new BitmapImage(new Uri(openFileDialogImage.FileName));
+                imagePictureBox.Source = new BitmapImage(new Uri(openFileDialogImage.FileName));
 
             }
         }
@@ -239,7 +244,26 @@ namespace SecurityAESProject
             }
         }
 
-        private void hideTextInImage(Object sender, RoutedEventArgs e) { }
+        private void hideTextInImage(Object sender, RoutedEventArgs e)
+        {
+            //bmp = (Bitmap)imagePictureBox.Source;
+            ////zip to string
+            //string text = dataTextBox.Text;
+            //byte[] test = File.ReadAllBytes(pathfile);
+            //string zipfileString = BitConverter.ToString(test);
+            //if (text.Equals("") || test.Length == 0)
+            //{
+            //    MessageBox.Show("The text you want to hide can't be empty", "Warning");
+
+            //    return;
+            //}
+
+            //bmp = SteganographyHelper.embedText(zipfileString, bmp);
+            //MessageBox.Show("Your text was hidden in the image successfully!", "Done");
+            //imagePictureBox.Image = bmp;
+            //notesLabel.Text = "Notes: don't forget to save your new image.";
+            //notesLabel.ForeColor = Color.Red;
+        }
 
         private void extractTextFromImage(Object sender, RoutedEventArgs e) { }
 
@@ -285,7 +309,7 @@ namespace SecurityAESProject
 
                     //
                     byte[] decryptedKey = KeyDecrypten();
-                    if ( decryptedKey != null && decryptedKey.Length > 0)
+                    if (decryptedKey != null && decryptedKey.Length > 0)
                     {
                         AES.Key = decryptedKey;
                         AES.IV = IVFile;
@@ -314,10 +338,10 @@ namespace SecurityAESProject
                         window.Show();
                         this.Close();
                     }
-                    
 
 
-                    
+
+
 
                 }
             }
@@ -355,12 +379,13 @@ namespace SecurityAESProject
                     File.WriteAllBytes(path, decrypted);
 
                     return decrypted;
-                } catch (CryptographicException ex)
+                }
+                catch (CryptographicException ex)
                 {
                     MessageBox.Show("Sorry, the file is not meant for you!");
                     return null;
                 }
-                
+
             }
         }
 
@@ -387,7 +412,7 @@ namespace SecurityAESProject
                 string hashFile = pathfolder + @"\hash.txt";
 
                 byte[] unhash = File.ReadAllBytes(hashFile);
-                
+
                 //decrypteren
                 byte[] decryptedHash = rsa.Decrypt(unhash, true);
 
@@ -412,7 +437,7 @@ namespace SecurityAESProject
                 pathfolder = pathfolder.Substring(0, pathfolder.LastIndexOf('\\'));
                 byte[] HashValue = SHhash.ComputeHash(File.ReadAllBytes(pathfolder + "\\plaintext.txt"));
 
-                MessageBox.Show(HashValue.ToString() +"\n\n" + decrypted.ToString());
+                MessageBox.Show(HashValue.ToString() + "\n\n" + decrypted.ToString());
                 bool areEqual = HashValue.SequenceEqual(decrypted);
                 if (areEqual)
                 {
