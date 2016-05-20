@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -14,7 +15,7 @@ namespace SecurityAESProject
             Filling_With_Zeros
         };
 
-        public static Bitmap embedText(string text, BitmapImage image)
+        public static BitmapImage embedText(string text, BitmapImage image)
         {
             Bitmap bmp;
             using (MemoryStream outStream = new MemoryStream())
@@ -75,7 +76,20 @@ namespace SecurityAESProject
                                 }
 
                                 // return the bitmap with the text hidden in
-                                return bmp;
+
+                                using (var memory = new MemoryStream())
+                                {
+                                    bmp.Save(memory, ImageFormat.Png);
+                                    memory.Position = 0;
+
+                                    var bitmapImage = new BitmapImage();
+                                    bitmapImage.BeginInit();
+                                    bitmapImage.StreamSource = memory;
+                                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                                    bitmapImage.EndInit();
+
+                                    return bitmapImage;
+                                }
                             }
 
                             // check if all characters has been hidden
@@ -146,12 +160,33 @@ namespace SecurityAESProject
                 }
             }
 
-            return bmp;
+            using (var memory = new MemoryStream())
+            {
+                bmp.Save(memory, ImageFormat.Png);
+                memory.Position = 0;
+
+                var bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = memory;
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+
+                return bitmapImage;
+            }
 
         }
 
-        public static string extractText(Bitmap bmp)
+        public static string extractText(BitmapImage image)
         {
+            Bitmap bmp;
+            using (MemoryStream outStream = new MemoryStream())
+            {
+                BitmapEncoder enc = new BmpBitmapEncoder();
+                enc.Frames.Add(BitmapFrame.Create(image));
+                enc.Save(outStream);
+                bmp = new Bitmap(outStream);
+            }
+
             int colorUnitIndex = 0;
             int charValue = 0;
 
