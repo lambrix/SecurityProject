@@ -1,20 +1,12 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace SecurityAESProject
 {
@@ -30,7 +22,8 @@ namespace SecurityAESProject
         private string personFilePublic;
         string pathfolder;
         //stega. var
-        private Bitmap bmp = null;
+        private Bitmap globalBitmap;
+        private BitmapImage bitmapImage;
         private string extractedText = string.Empty;
         private string pathfile = string.Empty;
 
@@ -223,6 +216,7 @@ namespace SecurityAESProject
                 fileLocation = System.IO.Path.GetFullPath(openFileDialogImage.FileName);
                 imagePathLabel.Content = fileLocation;
                 imagePictureBox.Source = new BitmapImage(new Uri(openFileDialogImage.FileName));
+                
 
             }
         }
@@ -246,26 +240,68 @@ namespace SecurityAESProject
 
         private void hideTextInImage(Object sender, RoutedEventArgs e)
         {
-            //bmp = (Bitmap)imagePictureBox.Source;
-            ////zip to string
-            //string text = dataTextBox.Text;
-            //byte[] test = File.ReadAllBytes(pathfile);
-            //string zipfileString = BitConverter.ToString(test);
-            //if (text.Equals("") || test.Length == 0)
-            //{
-            //    MessageBox.Show("The text you want to hide can't be empty", "Warning");
+            bitmapImage = (BitmapImage)imagePictureBox.Source;
+            
+            using (MemoryStream outStream = new MemoryStream())
+            {
+                BitmapEncoder enc = new BmpBitmapEncoder();
+                enc.Frames.Add(BitmapFrame.Create(bitmapImage));
+                enc.Save(outStream);
+                globalBitmap = new Bitmap(outStream);
+            }
+            
+            //zip to string
+            string pathfile = imagePathLabel.Content.ToString();
+            byte[] test = File.ReadAllBytes(pathfile);
+            string zipfileString = BitConverter.ToString(test);
+            if (test.Equals("") || test.Length == 0)
+            {
+                MessageBox.Show("The text you want to hide can't be empty", "Warning");
 
-            //    return;
-            //}
+                return;
+            }
 
-            //bmp = SteganographyHelper.embedText(zipfileString, bmp);
-            //MessageBox.Show("Your text was hidden in the image successfully!", "Done");
-            //imagePictureBox.Image = bmp;
+            globalBitmap = SteganographyHelper.embedText(zipfileString, globalBitmap);
+            MessageBox.Show("Your text was hidden in the image successfully!", "Done");
+
+            using (var memory = new MemoryStream())
+            {
+                globalBitmap.Save(memory, ImageFormat.Png);
+                memory.Position = 0;
+
+                var localBitmapImage = new BitmapImage();
+                localBitmapImage.BeginInit();
+                localBitmapImage.StreamSource = memory;
+                localBitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                localBitmapImage.EndInit();
+
+                bitmapImage = localBitmapImage;
+            }
+
+            imagePictureBox.Source = bitmapImage;
             //notesLabel.Text = "Notes: don't forget to save your new image.";
             //notesLabel.ForeColor = Color.Red;
         }
 
-        private void extractTextFromImage(Object sender, RoutedEventArgs e) { }
+        private void extractTextFromImage(Object sender, RoutedEventArgs e)
+        {
+            string extractedText = SteganographyHelper.extractText(globalBitmap);
+            //extractedText = SteganographyHelper.extractText(bmp);
+            //dataTextBox.Text = extractedText;
+            // string terug naar file en saven
+            // eerst splitten en dan terug zetten naar een byte array
+            string[] arr = extractedText.Split('-');
+            byte[] array = new byte[arr.Length];
+            for (int i = 0; i < arr.Length; i++) array[i] = Convert.ToByte(arr[i], 16);
+            
+            SaveFileDialog save_dialog = new SaveFileDialog();
+            //save_dialog.Filter = "Zip Files|*.zip;*.rar";
+            //save_dialog.Filter = "All files|*.*";
+            if (save_dialog.ShowDialog() == true)
+            {
+                File.WriteAllBytes(save_dialog.FileName, array);
+            }
+        }
 
         private void DropList_DragEnter(object sender, DragEventArgs e)
         {

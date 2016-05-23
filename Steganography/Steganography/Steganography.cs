@@ -57,7 +57,7 @@ namespace Steganography
             bmp = (Bitmap)imagePictureBox.Image;
             string extractedText = SteganographyHelper.extractText(bmp);
             //extractedText = SteganographyHelper.extractText(bmp);
-            dataTextBox.Text = extractedText;
+            //dataTextBox.Text = extractedText;
             // string terug naar file en saven
             // eerst splitten en dan terug zetten naar een byte array
             String[] arr = extractedText.Split('-');

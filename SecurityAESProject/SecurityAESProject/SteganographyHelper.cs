@@ -15,17 +15,8 @@ namespace SecurityAESProject
             Filling_With_Zeros
         };
 
-        public static BitmapImage embedText(string text, BitmapImage image)
+        public static Bitmap embedText(string text, Bitmap bmp)
         {
-            Bitmap bmp;
-            using (MemoryStream outStream = new MemoryStream())
-            {
-                BitmapEncoder enc = new BmpBitmapEncoder();
-                enc.Frames.Add(BitmapFrame.Create(image));
-                enc.Save(outStream);
-                bmp = new Bitmap(outStream);
-            }
-
             // initially, we'll be hiding characters in the image
             State state = State.Hiding;
 
@@ -77,19 +68,7 @@ namespace SecurityAESProject
 
                                 // return the bitmap with the text hidden in
 
-                                using (var memory = new MemoryStream())
-                                {
-                                    bmp.Save(memory, ImageFormat.Png);
-                                    memory.Position = 0;
-
-                                    var bitmapImage = new BitmapImage();
-                                    bitmapImage.BeginInit();
-                                    bitmapImage.StreamSource = memory;
-                                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                                    bitmapImage.EndInit();
-
-                                    return bitmapImage;
-                                }
+                                return bmp;
                             }
 
                             // check if all characters has been hidden
@@ -160,19 +139,7 @@ namespace SecurityAESProject
                 }
             }
 
-            using (var memory = new MemoryStream())
-            {
-                bmp.Save(memory, ImageFormat.Png);
-                memory.Position = 0;
-
-                var bitmapImage = new BitmapImage();
-                bitmapImage.BeginInit();
-                bitmapImage.StreamSource = memory;
-                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapImage.EndInit();
-
-                return bitmapImage;
-            }
+            return bmp;
 
         }
 
