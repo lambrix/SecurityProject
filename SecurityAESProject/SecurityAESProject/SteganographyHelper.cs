@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Media;
@@ -67,7 +68,6 @@ namespace SecurityAESProject
                                 }
 
                                 // return the bitmap with the text hidden in
-
                                 return bmp;
                             }
 
@@ -140,24 +140,23 @@ namespace SecurityAESProject
             }
 
             return bmp;
-
         }
 
-        public static string extractText(Bitmap image)
+        public static string extractText(Bitmap bmp)
         {
             int colorUnitIndex = 0;
             int charValue = 0;
 
             // holds the text that will be extracted from the image
-            string extractedText = string.Empty;
+            string extractedText = String.Empty;
 
             // pass through the rows
-            for (int i = 0; i < image.Height; i++)
+            for (int i = 0; i < bmp.Height; i++)
             {
                 // pass through each row
-                for (int j = 0; j < image.Width; j++)
+                for (int j = 0; j < bmp.Width; j++)
                 {
-                    System.Drawing.Color pixel = image.GetPixel(j, i);
+                    System.Drawing.Color pixel = bmp.GetPixel(j, i);
 
                     // for each pixel, pass through its elements (RGB)
                     for (int n = 0; n < 3; n++)
