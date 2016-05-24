@@ -224,7 +224,8 @@ namespace SecurityAESProject
         private void opendialogButtonClickText(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialogText = new OpenFileDialog();
-            openFileDialogText.Filter = "Text files (*.txt)|*.txt";
+            openFileDialogText.Filter = "Zip Files|*.zip;*.rar";
+            openFileDialogText.Filter = "All files|*.*";
             openFileDialogText.FilterIndex = 1;
             openFileDialogText.Multiselect = false;
 
@@ -295,7 +296,7 @@ namespace SecurityAESProject
             for (int i = 0; i < arr.Length; i++) array[i] = Convert.ToByte(arr[i], 16);
             
             SaveFileDialog save_dialog = new SaveFileDialog();
-            //save_dialog.Filter = "Zip Files|*.zip;*.rar";
+            save_dialog.Filter = "Zip Files|*.zip;*.rar";
             //save_dialog.Filter = "All files|*.*";
             if (save_dialog.ShowDialog() == true)
             {

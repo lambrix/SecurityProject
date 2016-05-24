@@ -143,17 +143,8 @@ namespace SecurityAESProject
 
         }
 
-        public static string extractText(BitmapImage image)
+        public static string extractText(Bitmap image)
         {
-            Bitmap bmp;
-            using (MemoryStream outStream = new MemoryStream())
-            {
-                BitmapEncoder enc = new BmpBitmapEncoder();
-                enc.Frames.Add(BitmapFrame.Create(image));
-                enc.Save(outStream);
-                bmp = new Bitmap(outStream);
-            }
-
             int colorUnitIndex = 0;
             int charValue = 0;
 
@@ -161,12 +152,12 @@ namespace SecurityAESProject
             string extractedText = string.Empty;
 
             // pass through the rows
-            for (int i = 0; i < bmp.Height; i++)
+            for (int i = 0; i < image.Height; i++)
             {
                 // pass through each row
-                for (int j = 0; j < bmp.Width; j++)
+                for (int j = 0; j < image.Width; j++)
                 {
-                    System.Drawing.Color pixel = bmp.GetPixel(j, i);
+                    System.Drawing.Color pixel = image.GetPixel(j, i);
 
                     // for each pixel, pass through its elements (RGB)
                     for (int n = 0; n < 3; n++)
