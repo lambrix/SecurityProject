@@ -18,3 +18,4 @@ C:\Users\11400081\Documents\projecten git\SecurityProject\Steganography\Steganog
 C:\Users\11400081\Documents\projecten git\SecurityProject\Steganography\Steganography\obj\x86\Debug\Steganography.csproj.GenerateResource.Cache
 C:\Users\11400081\Documents\projecten git\SecurityProject\Steganography\Steganography\obj\x86\Debug\Steganography.exe
 C:\Users\11400081\Documents\projecten git\SecurityProject\Steganography\Steganography\obj\x86\Debug\Steganography.pdb
+C:\Users\11400081\Documents\projecten git\SecurityProject\Steganography\Steganography\obj\x86\Debug\Steganography.csprojResolveAssemblyReference.cache

@@ -142,5 +142,10 @@ namespace Steganography
                 pathfile = open_dialog.FileName;
             }
         }
+
+        private void fileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
