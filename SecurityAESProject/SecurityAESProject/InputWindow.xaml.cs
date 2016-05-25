@@ -84,6 +84,13 @@ namespace SecurityAESProject
                     Byte[] input = File.ReadAllBytes(fileLocation);
                     AESDecrypt(input);
                 }
+            }else if(!(otherPersonTextBox.Text != "" && otherPersonTextBox.Text != null))
+            {
+                MessageBox.Show("Geef een naam op");
+            }
+            else if (!(fileLocation != "" && fileLocation != null))
+            {
+                MessageBox.Show("Geef een bestand op");
             }
         }
 
@@ -383,6 +390,7 @@ namespace SecurityAESProject
                         //gegevens in een bestand wegschrijven
                         string path = rightLocation + "\\plaintext."+extension;
                         File.WriteAllText(path, plaintext);
+                        MessageBox.Show("Bestand gedecrypteerd");
 
                         string hashpath = rightLocation + "\\hash.txt";
                         byte[] hashencrypted = File.ReadAllBytes(hashpath);
