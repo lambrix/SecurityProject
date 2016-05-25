@@ -216,122 +216,122 @@ namespace SecurityAESProject
             }
         }
 
-        private void opendialogButtonClickImage(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog openFileDialogImage = new OpenFileDialog();
-            openFileDialogImage.Filter = "Image Files (*.png*)|*.png*";
-            openFileDialogImage.FilterIndex = 1;
-            openFileDialogImage.Multiselect = false;
+        //private void opendialogButtonClickImage(object sender, RoutedEventArgs e)
+        //{
+        //    OpenFileDialog openFileDialogImage = new OpenFileDialog();
+        //    openFileDialogImage.Filter = "Image Files (*.png*)|*.png*";
+        //    openFileDialogImage.FilterIndex = 1;
+        //    openFileDialogImage.Multiselect = false;
 
-            if (openFileDialogImage.ShowDialog() == true)
-            {
-                //fileLocation = System.IO.Path.GetDirectoryName(openFileDialog.FileName); We hebben de file nodig niet het pad
-                fileLocation = System.IO.Path.GetFullPath(openFileDialogImage.FileName);
-                imagePathLabel.Content = fileLocation;
-                imagePictureBox.Source = new BitmapImage(new Uri(openFileDialogImage.FileName));
+        //    if (openFileDialogImage.ShowDialog() == true)
+        //    {
+        //        //fileLocation = System.IO.Path.GetDirectoryName(openFileDialog.FileName); We hebben de file nodig niet het pad
+        //        fileLocation = System.IO.Path.GetFullPath(openFileDialogImage.FileName);
+        //        imagePathLabel.Content = fileLocation;
+        //        imagePictureBox.Source = new BitmapImage(new Uri(openFileDialogImage.FileName));
                 
 
-            }
-        }
+        //    }
+        //}
 
-        private void opendialogButtonClickText(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog openFileDialogText = new OpenFileDialog();
-            openFileDialogText.Filter = "Zip Files|*.zip;*.rar";
-            openFileDialogText.Filter = "All files|*.*";
-            openFileDialogText.FilterIndex = 1;
-            openFileDialogText.Multiselect = false;
+        //private void opendialogButtonClickText(object sender, RoutedEventArgs e)
+        //{
+        //    OpenFileDialog openFileDialogText = new OpenFileDialog();
+        //    openFileDialogText.Filter = "Zip Files|*.zip;*.rar";
+        //    openFileDialogText.Filter = "All files|*.*";
+        //    openFileDialogText.FilterIndex = 1;
+        //    openFileDialogText.Multiselect = false;
 
-            if (openFileDialogText.ShowDialog() == true)
-            {
-                //fileLocation = System.IO.Path.GetDirectoryName(openFileDialog.FileName); We hebben de file nodig niet het pad
-                fileLocation = System.IO.Path.GetFullPath(openFileDialogText.FileName);
-                textPathLabel.Content = fileLocation;
-                textToBeHidden.Text = File.ReadAllText(openFileDialogText.FileName);
-                textToBeHidden.TextWrapping = TextWrapping.Wrap;
-            }
-        }
+        //    if (openFileDialogText.ShowDialog() == true)
+        //    {
+        //        //fileLocation = System.IO.Path.GetDirectoryName(openFileDialog.FileName); We hebben de file nodig niet het pad
+        //        fileLocation = System.IO.Path.GetFullPath(openFileDialogText.FileName);
+        //        textPathLabel.Content = fileLocation;
+        //        textToBeHidden.Text = File.ReadAllText(openFileDialogText.FileName);
+        //        textToBeHidden.TextWrapping = TextWrapping.Wrap;
+        //    }
+        //}
 
-        private void hideTextInImage(Object sender, RoutedEventArgs e)
-        {
-            bitmapImage = (BitmapImage)imagePictureBox.Source;
+        //private void hideTextInImage(Object sender, RoutedEventArgs e)
+        //{
+        //    bitmapImage = (BitmapImage)imagePictureBox.Source;
             
-            using (MemoryStream outStream = new MemoryStream())
-            {
-                BitmapEncoder enc = new BmpBitmapEncoder();
-                enc.Frames.Add(BitmapFrame.Create(bitmapImage));
-                enc.Save(outStream);
-                globalBitmap = new Bitmap(outStream);
-            }
+        //    using (MemoryStream outStream = new MemoryStream())
+        //    {
+        //        BitmapEncoder enc = new BmpBitmapEncoder();
+        //        enc.Frames.Add(BitmapFrame.Create(bitmapImage));
+        //        enc.Save(outStream);
+        //        globalBitmap = new Bitmap(outStream);
+        //    }
             
-            //zip to string
-            string pathfile = textPathLabel.Content.ToString();
-            byte[] test = File.ReadAllBytes(pathfile);
+        //    //zip to string
+        //    string pathfile = textPathLabel.Content.ToString();
+        //    byte[] test = File.ReadAllBytes(pathfile);
             
-            //MessageBox.Show(string.Join("-", test));
-            //string zipfileString2 = BitConverter.ToString(test);
-            //string zipfileString = Encoding.ASCII.GetString(test);
-            string zipfileString = string.Join("-", test);
-            //Encoding.Convert(Encoding.ASCII, Encoding.UTF8, test);
-            //MessageBox.Show(zipfileString);
-            if (test.Equals("") || test.Length == 0)
-            {
-                MessageBox.Show("The text you want to hide can't be empty", "Warning");
+        //    //MessageBox.Show(string.Join("-", test));
+        //    //string zipfileString2 = BitConverter.ToString(test);
+        //    //string zipfileString = Encoding.ASCII.GetString(test);
+        //    string zipfileString = string.Join("-", test);
+        //    //Encoding.Convert(Encoding.ASCII, Encoding.UTF8, test);
+        //    //MessageBox.Show(zipfileString);
+        //    if (test.Equals("") || test.Length == 0)
+        //    {
+        //        MessageBox.Show("The text you want to hide can't be empty", "Warning");
 
-                return;
-            }
+        //        return;
+        //    }
 
-            globalBitmap = SteganographyHelper.embedText(zipfileString, globalBitmap);
-            MessageBox.Show("Your text was hidden in the image successfully!", "Done");
+        //    globalBitmap = SteganographyHelper.embedText(zipfileString, globalBitmap);
+        //    MessageBox.Show("Your text was hidden in the image successfully!", "Done");
 
-            using (var memory = new MemoryStream())
-            {
-                globalBitmap.Save(memory, ImageFormat.Png);
-                memory.Position = 0;
+        //    using (var memory = new MemoryStream())
+        //    {
+        //        globalBitmap.Save(memory, ImageFormat.Png);
+        //        memory.Position = 0;
 
-                var localBitmapImage = new BitmapImage();
-                localBitmapImage.BeginInit();
-                localBitmapImage.StreamSource = memory;
-                localBitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                localBitmapImage.EndInit();
+        //        var localBitmapImage = new BitmapImage();
+        //        localBitmapImage.BeginInit();
+        //        localBitmapImage.StreamSource = memory;
+        //        localBitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+        //        localBitmapImage.EndInit();
 
-                bitmapImage = localBitmapImage;
-            }
+        //        bitmapImage = localBitmapImage;
+        //    }
 
-            imagePictureBox.Source = bitmapImage;
-            //notesLabel.Text = "Notes: don't forget to save your new image.";
-            //notesLabel.ForeColor = Color.Red;
-        }
+        //    imagePictureBox.Source = bitmapImage;
+        //    //notesLabel.Text = "Notes: don't forget to save your new image.";
+        //    //notesLabel.ForeColor = Color.Red;
+        //}
 
-        private void extractTextFromImage(Object sender, RoutedEventArgs e)
-        {
-            string extractedText = SteganographyHelper.extractText(globalBitmap);
-            //extractedText = SteganographyHelper.extractText(bmp);
-            //dataTextBox.Text = extractedText;
-            // string terug naar file en saven
-            // eerst splitten en dan terug zetten naar een byte array
-            //MessageBox.Show(extractedText);
-            string[] arr = extractedText.Split('-');
-            int[] intArr = Array.ConvertAll(arr, element => int.Parse(element));
+        //private void extractTextFromImage(Object sender, RoutedEventArgs e)
+        //{
+        //    string extractedText = SteganographyHelper.extractText(globalBitmap);
+        //    //extractedText = SteganographyHelper.extractText(bmp);
+        //    //dataTextBox.Text = extractedText;
+        //    // string terug naar file en saven
+        //    // eerst splitten en dan terug zetten naar een byte array
+        //    //MessageBox.Show(extractedText);
+        //    string[] arr = extractedText.Split('-');
+        //    int[] intArr = Array.ConvertAll(arr, element => int.Parse(element));
 
 
-            byte[] array = new byte[arr.Length];
-            char[] chars = intArr.Select(x => (char)x).ToArray();
-            string str = new string(chars);
-            MessageBox.Show(str);
-            byte[] byteArray = Encoding.Default.GetBytes(chars);
+        //    byte[] array = new byte[arr.Length];
+        //    char[] chars = intArr.Select(x => (char)x).ToArray();
+        //    string str = new string(chars);
+        //    MessageBox.Show(str);
+        //    byte[] byteArray = Encoding.Default.GetBytes(chars);
 
-            //for (int i = 0; i < arr.Length; i++) array[i] = Convert.ToByte(arr[i], 16);
-            //byte[] toBytes = Encoding.Default.GetBytes(extractedText);
-            SaveFileDialog save_dialog = new SaveFileDialog();
-            save_dialog.Filter = "Zip Files|*.zip;*.rar|Text files (*.txt)|*.txt";
-            //save_dialog.Filter = "All files|*.*";
-            if (save_dialog.ShowDialog() == true)
-            {
-                File.WriteAllBytes(save_dialog.FileName, byteArray);
-                //File.WriteAllBytes(save_dialog.FileName, toBytes);
-            }
-        }
+        //    //for (int i = 0; i < arr.Length; i++) array[i] = Convert.ToByte(arr[i], 16);
+        //    //byte[] toBytes = Encoding.Default.GetBytes(extractedText);
+        //    SaveFileDialog save_dialog = new SaveFileDialog();
+        //    save_dialog.Filter = "Zip Files|*.zip;*.rar|Text files (*.txt)|*.txt";
+        //    //save_dialog.Filter = "All files|*.*";
+        //    if (save_dialog.ShowDialog() == true)
+        //    {
+        //        File.WriteAllBytes(save_dialog.FileName, byteArray);
+        //        //File.WriteAllBytes(save_dialog.FileName, toBytes);
+        //    }
+        //}
 
         private void DropList_DragEnter(object sender, DragEventArgs e)
         {
