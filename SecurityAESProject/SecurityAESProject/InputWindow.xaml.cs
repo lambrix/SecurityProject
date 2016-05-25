@@ -513,14 +513,18 @@ namespace SecurityAESProject
             try
             {
                 string myDocPath =
-                        Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                string exe = myDocPath + @"/Steganography.exe";
+                      System.IO.Directory.GetCurrentDirectory();
+                for (int i = 0; i < 4; i++)
+                {
+                    myDocPath = Directory.GetParent(myDocPath).ToString();
+                }
+                string exe = myDocPath + @"\Steganography" + @"\Steganography"+@"\bin"+ @"\Debug" + @"\Steganography.exe";
                 Process.Start(exe);
             }
             catch (Exception)
             {
 
-                MessageBox.Show("oops something went wrong\n\nTIP\nplace Steganography.exe in MyDocuments");
+                MessageBox.Show("oops something went wrong\n\nTIP\nrun Steganography solution first");
             }
         }
     }
