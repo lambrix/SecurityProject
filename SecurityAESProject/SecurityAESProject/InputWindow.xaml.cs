@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -488,11 +489,38 @@ namespace SecurityAESProject
                 if (correct)
                 {
                     MessageBox.Show("hashes zijn gelijk");
+                    
+                    if (!File.Exists(plainTextFile))
+                    {
+                        return;
+                    }
+
+                    // combine the arguments together
+                    string argument = @"/select, " + plainTextFile;
+
+                    System.Diagnostics.Process.Start("explorer.exe", argument);
                 }
                 else
                 {
                     MessageBox.Show("hashes zijn verschillend");
                 }
+            }
+        }
+
+        private void stega_Click(object sender, RoutedEventArgs e)
+        {
+
+            try
+            {
+                string myDocPath =
+                        Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                string exe = myDocPath + @"/Steganography.exe";
+                Process.Start(exe);
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("oops something went wrong\n\nTIP\nplace Steganography.exe in MyDocuments");
             }
         }
     }
