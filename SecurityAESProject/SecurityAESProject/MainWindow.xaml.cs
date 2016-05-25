@@ -21,11 +21,18 @@ namespace SecurityAESProject
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
-    { 
+    {
+        private string extension = "";
 
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        public MainWindow(String extension)
+        {
+            InitializeComponent();
+            this.extension = extension;
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -49,7 +56,7 @@ namespace SecurityAESProject
                     }
                     
                 }
-                InputWindow window = new InputWindow(textBox.Text);
+                InputWindow window = new InputWindow(textBox.Text, extension);
                 window.Show();
                 this.Close();
             }

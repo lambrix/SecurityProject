@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
@@ -19,6 +20,7 @@ namespace SecurityAESProject
         private String userName;
         private String welcome = "Welcome ";
         private String fileLocation;
+        private String extension;
         private string personFilePublic;
         string pathfolder;
         //stega. var
@@ -27,10 +29,11 @@ namespace SecurityAESProject
         private string extractedText = string.Empty;
         private string pathfile = string.Empty;
 
-        public InputWindow(String name)
+        public InputWindow(String name, String extension)
         {
             InitializeComponent();
             this.userName = name;
+            this.extension = extension;
             welcome = welcome + userName;
             nameLabel.Content = welcome;
 
@@ -72,7 +75,7 @@ namespace SecurityAESProject
 
                     MessageBox.Show("encryptie gelukt");
 
-                    MainWindow window = new MainWindow();
+                    MainWindow window = new MainWindow(extension);
                     window.Show();
                     this.Close();
                 }
@@ -105,6 +108,8 @@ namespace SecurityAESProject
                     byte[] IV = AES.IV;
                     //folder aanmaken voor bestanden op te slaan
                     int l = fileLocation.LastIndexOf('.');
+                    int pos = l + 1;
+                    extension = fileLocation.Substring(pos, fileLocation.Length - pos);
                     pathfolder = fileLocation.Substring(0, l);
                     Directory.CreateDirectory(pathfolder);
 
@@ -252,9 +257,15 @@ namespace SecurityAESProject
             }
             
             //zip to string
-            string pathfile = imagePathLabel.Content.ToString();
+            string pathfile = textPathLabel.Content.ToString();
             byte[] test = File.ReadAllBytes(pathfile);
-            string zipfileString = BitConverter.ToString(test);
+            
+            //MessageBox.Show(string.Join("-", test));
+            //string zipfileString2 = BitConverter.ToString(test);
+            //string zipfileString = Encoding.ASCII.GetString(test);
+            string zipfileString = string.Join("-", test);
+            //Encoding.Convert(Encoding.ASCII, Encoding.UTF8, test);
+            //MessageBox.Show(zipfileString);
             if (test.Equals("") || test.Length == 0)
             {
                 MessageBox.Show("The text you want to hide can't be empty", "Warning");
@@ -291,16 +302,26 @@ namespace SecurityAESProject
             //dataTextBox.Text = extractedText;
             // string terug naar file en saven
             // eerst splitten en dan terug zetten naar een byte array
+            //MessageBox.Show(extractedText);
             string[] arr = extractedText.Split('-');
+            int[] intArr = Array.ConvertAll(arr, element => int.Parse(element));
+
+
             byte[] array = new byte[arr.Length];
-            for (int i = 0; i < arr.Length; i++) array[i] = Convert.ToByte(arr[i], 16);
-            
+            char[] chars = intArr.Select(x => (char)x).ToArray();
+            string str = new string(chars);
+            MessageBox.Show(str);
+            byte[] byteArray = Encoding.Default.GetBytes(chars);
+
+            //for (int i = 0; i < arr.Length; i++) array[i] = Convert.ToByte(arr[i], 16);
+            //byte[] toBytes = Encoding.Default.GetBytes(extractedText);
             SaveFileDialog save_dialog = new SaveFileDialog();
-            save_dialog.Filter = "Zip Files|*.zip;*.rar";
-            ////save_dialog.Filter = "All files|*.*";
+            save_dialog.Filter = "Zip Files|*.zip;*.rar|Text files (*.txt)|*.txt";
+            //save_dialog.Filter = "All files|*.*";
             if (save_dialog.ShowDialog() == true)
             {
-                File.WriteAllBytes(save_dialog.FileName, array);
+                File.WriteAllBytes(save_dialog.FileName, byteArray);
+                //File.WriteAllBytes(save_dialog.FileName, toBytes);
             }
         }
 
@@ -360,7 +381,7 @@ namespace SecurityAESProject
                         }
 
                         //gegevens in een bestand wegschrijven
-                        string path = rightLocation + "\\plaintext.txt";
+                        string path = rightLocation + "\\plaintext."+extension;
                         File.WriteAllText(path, plaintext);
 
                         string hashpath = rightLocation + "\\hash.txt";
@@ -444,7 +465,7 @@ namespace SecurityAESProject
                 rsa.FromXmlString(publicKey);
                 //MessageBox.Show(publicKey);
                 pathfolder = pathfolder.Substring(0, pathfolder.LastIndexOf('\\'));
-                string plainTextFile = pathfolder + @"\plaintext.txt";
+                string plainTextFile = pathfolder + @"\plaintext."+extension;
                 byte[] plainText = File.ReadAllBytes(plainTextFile);
 
                 SHA256Managed SHhash = new SHA256Managed();
