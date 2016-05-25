@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="InputWindow" Height="350" Width="525">
     <Grid>
-        <TabControl Margin="0,0,0.4,-0.2">
+        <TabControl>
             <TabItem Header="Encrypt/Decrypt">
                 <Grid>
                     <Button x:Name="nextScreenButton" Content="Next" HorizontalAlignment="Left" Margin="341,188,0,0" VerticalAlignment="Top" Width="87" Click="nextButtonClick" Height="34"/>
@@ -17,6 +17,25 @@
                     <Label x:Name="pathLabel" BorderBrush="Black" BorderThickness="1px" Content="Path:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="107,188,0,0" Width="179" Height="34" FontSize="9.333" RenderTransformOrigin="0.5,0.5"/>
                     <ListView x:Name="dropList" Drop="DropList_Drop" DragEnter="DropList_DragEnter" AllowDrop="True" HorizontalAlignment="Left" Height="141" Margin="107,47,0,0"  VerticalAlignment="Top" Width="220" />
                     <Label x:Name="nameLabel" Content="" HorizontalAlignment="Left" Margin="211,21,0,0" VerticalAlignment="Top" Width="116" RenderTransformOrigin="0.495,0.5"/>
+                    <Button x:Name="hyperlinkButton" Content="I don't have a key!" HorizontalAlignment="Left" Margin="10,292,0,0" VerticalAlignment="Top" Width="98" Click="hyperlinkButton_Click">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <TextBlock TextDecorations="Underline">
+                        <ContentPresenter/>
+                                </TextBlock>
+                            </ControlTemplate>
+                        </Button.Template>
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Foreground" Value="Blue"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="true">
+                                        <Setter Property="Foreground" Value="Red"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
                     <TextBox x:Name="otherPersonTextBox" HorizontalAlignment="Left" Height="34" Margin="341,154,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="87"/>
                     <Label x:Name="NameLabel" Content="Specify Name" HorizontalAlignment="Left" Margin="341,128,0,0" VerticalAlignment="Top" Width="87"/>
                 </Grid>
