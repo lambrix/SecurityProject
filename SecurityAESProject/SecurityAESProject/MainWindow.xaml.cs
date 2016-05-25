@@ -60,6 +60,10 @@ namespace SecurityAESProject
                 window.Show();
                 this.Close();
             }
+            else
+            {
+                MessageBox.Show("Vul een naam in (usergegevens worden automatisch gegenereerd.");
+            }
             
         }
     }
